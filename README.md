@@ -22,13 +22,13 @@
 ### 1. Installation
 To begin with, please clone this repo:
 ```
-git clone git@github.com:usc-sail/peft-ser.git
+git clone https://github.com/saikrishna-prathapaneni/peft-ser.git
 ```
 
 To install the conda environment:
 ```
 cd peft-ser
-conda env create -f peft-ser.yml
+conda env create -f peft-ser-m.yml
 conda activate peft-ser
 ```
 
