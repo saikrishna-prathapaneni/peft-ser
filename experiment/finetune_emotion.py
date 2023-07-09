@@ -30,7 +30,7 @@ from wavlm_plus import WavLMWrapper
 from lstm import SentimentLSTM
 
 
-WhisperWrapper =[]
+from whisperr import  WhisperWrapper
 from evaluation import EvalMetric
 from dataloader import load_finetune_audios, set_finetune_dataloader, return_weights
 

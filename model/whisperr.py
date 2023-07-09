@@ -316,7 +316,7 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser(description='emo2vec finetune experiments')
     parser.add_argument(
-        '--pretrained_model', 
+        '--pretrain_model', 
         default='whisper_tiny',
         type=str, 
         help='finetune method: whisper_tiny, whisper_base, whisper_small'
@@ -349,7 +349,12 @@ if __name__ == '__main__':
         type=int, 
         help='adapter dimension'
     )
-    
+    parser.add_argument(
+        '--finetune_emb', 
+        default=None,
+        type=int, 
+        help='all'
+    )
     args = parser.parse_args()
     model = WhisperWrapper(args).cuda()
     data = torch.zeros([1, 16000]).cuda()
