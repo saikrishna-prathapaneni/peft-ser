@@ -106,10 +106,11 @@ class Wav2VecWrapper(nn.Module):
         state_dict = self.backbone_model.state_dict()
         # 2. Read the model config
         self.model_config = self.backbone_model.config
+       
         self.model_config.finetune_method        = args.finetune_method
         self.model_config.adapter_hidden_dim     = args.adapter_hidden_dim
         self.model_config.embedding_prompt_dim   = args.embedding_prompt_dim
-        self.model_config.lora_rank              = args.lora_rank
+        #self.model_config.lora_rank              = args.lora_rank
         
         # 3. Config encoder layers with adapter or embedding prompt
         # pdb.set_trace()
@@ -134,13 +135,15 @@ class Wav2VecWrapper(nn.Module):
             nn.Conv1d(hidden_dim, hidden_dim, 1, padding=0)
         )
         self.weights = nn.Parameter(torch.zeros(self.model_config.num_hidden_layers))
-        
-        self.out_layer = nn.Sequential(
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, output_class_num),
-        )
-        
+  
+
+       
+              
+        # self.out_layer = nn.Sequential(
+        #     nn.Linear(hidden_dim, hidden_dim),
+        #     nn.ReLU(),
+        #     nn.Linear(hidden_dim, output_class_num),
+        # )
     def forward(self, x, length=None):
         # 1. feature extraction and projections
         with torch.no_grad():
@@ -187,8 +190,9 @@ class Wav2VecWrapper(nn.Module):
         
         # 8. Output predictions
         # B x D
-        predicted = self.out_layer(features)
-        return predicted
+        #change the model
+        #predicted = self.out_layer(features) 
+        return features
         
     # From huggingface
     def get_feat_extract_output_lengths(self, input_length):
@@ -243,4 +247,5 @@ if __name__ == '__main__':
     model = Wav2VecWrapper(args)
     data = torch.zeros([1, 16000])
     output = model(data)
+    print(model.eval())
     print(output.shape)
