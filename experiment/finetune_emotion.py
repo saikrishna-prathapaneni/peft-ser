@@ -27,7 +27,10 @@ from utils import parse_finetune_args, set_seed, log_epoch_result, log_best_resu
 # from utils
 from wav2vec import Wav2VecWrapper
 from wavlm_plus import WavLMWrapper
-from whisper import WhisperWrapper
+from lstm import SentimentLSTM
+
+
+WhisperWrapper =[]
 from evaluation import EvalMetric
 from dataloader import load_finetune_audios, set_finetune_dataloader, return_weights
 
@@ -85,9 +88,11 @@ def train_epoch(
         x, y, length = x.to(device), y.to(device), length.to(device)
         
         # forward pass
-        outputs = model(x, length=length)
+        outputs = model(x)
                     
         # backward
+        # print(outputs.size())
+        # print(y[:,0].size())
         loss = criterion(outputs, y)
         loss.backward()
         
@@ -192,25 +197,27 @@ if __name__ == '__main__':
         
         # Set seeds
         set_seed(8*fold_idx)
+        #if args.downstream_model == "cnn":
+            # Define the number of class
+        if args.dataset in ["iemocap", "msp-improv", "meld", "iemocap_impro"]: num_class = 4
+        elif args.dataset in ["msp-podcast"]: num_class = 4
+        elif args.dataset in ["crema_d"]: num_class = 4
+        elif args.dataset in ["ravdess"]: num_class = 7
         
         # Define the model wrapper
         if args.pretrain_model == "wav2vec2_0":
             # Wav2vec2_0 Wrapper
-            model = Wav2VecWrapper(args).to(device)
+            #model = Wav2VecWrapper(args=args,output_class_num=num_class).to(device)
+            model = SentimentLSTM(args=args).to(device)
         elif args.pretrain_model == "wavlm_plus":
             # WavLM Plus Wrapper
-            model = WavLMWrapper(args).to(device)
+            model = WavLMWrapper(args=args,output_class_num=num_class).to(device)
         elif args.pretrain_model in ["whisper_tiny", "whisper_base", "whisper_small", "whisper_medium", "whisper_large"]:
             # Whisper Plus Wrapper
-            model = WhisperWrapper(args).to(device)
+            model = WhisperWrapper(args=args,output_class_num=num_class).to(device)
         
         # Define the downstream models
-        if args.downstream_model == "cnn":
-            # Define the number of class
-            if args.dataset in ["iemocap", "msp-improv", "meld", "iemocap_impro"]: num_class = 4
-            elif args.dataset in ["msp-podcast"]: num_class = 4
-            elif args.dataset in ["crema_d"]: num_class = 4
-            elif args.dataset in ["ravdess"]: num_class = 7
+    
         
         # Read trainable params
         model_parameters = list(filter(lambda p: p.requires_grad, model.parameters()))
