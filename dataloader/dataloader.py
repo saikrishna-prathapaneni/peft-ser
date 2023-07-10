@@ -457,8 +457,8 @@ def set_finetune_dataloader(
 
         dataloader = DataLoader(
             data_generator, 
-            batch_size=2, 
-            num_workers=2, 
+            batch_size=32, 
+            num_workers=4, 
             drop_last=True,
             sampler=datasampler
         )
@@ -466,7 +466,7 @@ def set_finetune_dataloader(
         if is_train:
             dataloader = DataLoader(
                 data_generator, 
-                batch_size=1, 
+                batch_size=2, 
                 num_workers=2, 
                 shuffle=is_train,
                 collate_fn=collate_fn,
