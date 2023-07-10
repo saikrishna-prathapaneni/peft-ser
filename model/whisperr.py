@@ -140,7 +140,7 @@ class WhisperWrapper(nn.Module):
         self, 
         args, 
         hidden_dim=256,
-        output_class_num=4
+        output_class_num=7
     ):
         super(WhisperWrapper, self).__init__()
         # 1. We Load the model first with weights

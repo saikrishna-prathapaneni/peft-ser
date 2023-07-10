@@ -88,11 +88,13 @@ def train_epoch(
         x, y, length = x.to(device), y.to(device), length.to(device)
         
         # forward pass
-        outputs = model(x)
+        outputs = model(x,length=length)
                     
         # backward
         # print(outputs.size())
-        # print(y[:,0].size())
+        print(x.shape)
+        print(y)
+        print(outputs.shape)        
         loss = criterion(outputs, y)
         loss.backward()
         
